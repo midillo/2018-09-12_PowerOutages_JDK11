@@ -1,9 +1,12 @@
 package it.polito.tdp.poweroutages;
 
 import java.net.URL;
+import java.util.List;
 import java.util.ResourceBundle;
 
 import it.polito.tdp.poweroutages.model.Model;
+import it.polito.tdp.poweroutages.model.Nerc;
+import it.polito.tdp.poweroutages.model.Vicini;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
@@ -28,7 +31,7 @@ public class FXMLController {
     private Button btnCreaGrafo;
 
     @FXML
-    private ComboBox<?> cmbBoxNerc;
+    private ComboBox<Nerc> cmbBoxNerc;
 
     @FXML
     private Button btnVisualizzaVicini;
@@ -41,7 +44,12 @@ public class FXMLController {
 
     @FXML
     void doCreaGrafo(ActionEvent event) {
-
+    	txtResult.clear();
+    	
+    	model.creaGrafo();
+    	txtResult.appendText("Grafo creato!\nPossiede: " +model.getNvertici()+ " vertici e " +model.getNarchi()+ " archi.\n");
+    	
+    	cmbBoxNerc.getItems().addAll(model.getNercs());
     }
 
     @FXML
@@ -51,7 +59,19 @@ public class FXMLController {
 
     @FXML
     void doVisualizzaVicini(ActionEvent event) {
-
+    	txtResult.clear();
+    	Nerc partenza = cmbBoxNerc.getValue();
+    	
+    	List<Vicini> lista = model.getVicini(partenza);
+    	
+    	if(lista == null) {
+    		txtResult.appendText("Il nerc selezionato non possiede alcun arco.\n");
+    	}
+    	
+    	for(Vicini v: lista) {
+    		txtResult.appendText(v.toString());
+    	}
+    	
     }
 
     @FXML
